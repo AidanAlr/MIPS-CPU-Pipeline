@@ -272,9 +272,9 @@ class DataPipeline:
         )
 
         # Extract the funct field from the instruction if it is an R-format instruction
-        funct = disassembled_instruction["operation"]
-        if funct in ["add", "sub"]:
-            self.ID_EX.write["funct"] = funct
+        operation = disassembled_instruction["operation"]
+        if operation in ["add", "sub"]:
+            self.ID_EX.write["funct"] = operation
 
         # Get the values of the read registers
         read_reg_1 = disassembled_instruction["rs"]
