@@ -288,8 +288,15 @@ class DataPipeline:
         self.ID_EX.write["SEoffset"] = disassembled_instruction["off"]
 
         # Set the write registers
-        self.ID_EX.write["write_reg_20_16"] = disassembled_instruction["rt"]
-        self.ID_EX.write["write_reg_15_11"] = disassembled_instruction["rd"]
+        write_reg_20_16 = disassembled_instruction["rt"]
+        write_reg_15_11 = disassembled_instruction["rd"]
+
+        if operation in ["lb"]:
+            self.ID_EX.write["WriteRegNum"] = write_reg_20_16
+        elif operation in ["add", "sub"]:
+            self.ID_EX.write["WriteRegNum"] = write_reg_15_11
+        else:
+            self.ID_EX.write["WriteRegNum"] = None
 
     def EX_stage(self):
         self.EX_MEM.write = self.ID_EX.read
@@ -361,15 +368,15 @@ class DataPipeline:
         if MemToReg and RegWrite:
             # Get the value to be written to the register
             write_data = final_dict["LBdata"]
-            # Get the register to write to
-            write_reg = final_dict["write_reg_20_16"]
-            self.regs[write_reg] = write_data
-
         # R-format instruction
         elif not MemToReg and RegWrite:
             write_data = final_dict["ALUResult"]
-            write_reg = final_dict["write_reg_15_11"]
-            self.regs[write_reg] = write_data
+        else:
+            return
+
+        # Get the register to write to
+        write_reg = final_dict["WriteRegNum"]
+        self.regs[write_reg] = write_data
 
     # Run the pipeline
     def run(self):
@@ -395,6 +402,8 @@ class DataPipeline:
 
             self.clock_cycle += 1
             print("\n")
+
+        print("Pipeline execution complete.")
 
 
 # Running the data pipeline simulation
