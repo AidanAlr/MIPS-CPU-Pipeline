@@ -273,19 +273,19 @@ class DataPipeline:
             disassembled_instruction
         )
 
-        # Extract the funct field from the instruction
+        # Extract the funct field from the instruction if it is an R-format instruction
         funct = disassembled_instruction["operation"]
-        self.ID_EX.write["funct"] = funct
+        if funct in ["add", "sub"]:
+            self.ID_EX.write["funct"] = funct
 
         # Get the values of the read registers
-        read_reg_1_value = self.regs[disassembled_instruction["rs"]]
-        read_reg_2_value = self.regs[disassembled_instruction["rt"]]
-        self.ID_EX.write["read_reg_1_value"] = read_reg_1_value
-        self.ID_EX.write["read_reg_2_value"] = read_reg_2_value
+        read_reg_1 = disassembled_instruction["rs"]
+        read_reg_2 = disassembled_instruction["rt"]
+        self.ID_EX.write["read_reg_1_value"] = self.regs[read_reg_1]
+        self.ID_EX.write["read_reg_2_value"] = self.regs[read_reg_2]
 
         # Set the SEoffset
-        SEoffset = disassembled_instruction["off"]
-        self.ID_EX.write["SEoffset"] = SEoffset
+        self.ID_EX.write["SEoffset"] = disassembled_instruction["off"]
 
         # Set the write registers
         self.ID_EX.write["write_reg_20_16"] = disassembled_instruction["rt"]
@@ -306,13 +306,14 @@ class DataPipeline:
 
         ALUOp = control_signals["ALUOp"]
 
-        funct = self.EX_MEM.write["funct"]
         # ALU operation
         # Checking if the instruction is an I format instruction
         if ALUOp == 0:
             ALUResult = read_reg_1_value + SEoffset
         elif ALUOp == 1:
             # For r format instructions
+            # Get the funct field from the instruction
+            funct = self.EX_MEM.write["funct"]
             if funct == "add":
                 ALUResult = read_reg_1_value + read_reg_2_value
             elif funct == "sub":
@@ -340,18 +341,15 @@ class DataPipeline:
 
         # sb operation
         elif control_signals["MemWrite"]:
-            # print("Memory Write Operation")
+            # The target address is the ALU result
             address = self.MEM_WB.write["ALUResult"]
+            # The data to be written is the value in the second read register
             data = self.MEM_WB.write["read_reg_2_value"]
+            # Write the data to memory
             self.main_mem[address] = data
-            #
-            # print("MEM Instruction: ", disassemble(self.MEM_WB.write["instruction"]))
-            # print(f"Data {data} written to address: {address}")
 
     def WB_stage(self):
-
         final_dict = self.MEM_WB.read
-
         if final_dict["nop"]:
             return
 
@@ -359,9 +357,7 @@ class DataPipeline:
         MemToReg = control_signals["MemToReg"]
         RegWrite = control_signals["RegWrite"]
 
-        # print("WB Instruction: ", disassemble(final_dict["instruction"]))
-
-        # This is a load instruction
+        # load instruction
         if MemToReg and RegWrite:
             # Get the value to be written to the register
             write_data = final_dict["LBdata"]
@@ -369,21 +365,11 @@ class DataPipeline:
             write_reg = final_dict["write_reg_20_16"]
             self.regs[write_reg] = write_data
 
-            # print("Write data: ", write_data)
-            # print("Write register: ", write_reg)
-
-        # This is a R-format instruction
+        # R-format instruction
         elif not MemToReg and RegWrite:
             write_data = final_dict["ALUResult"]
             write_reg = final_dict["write_reg_15_11"]
             self.regs[write_reg] = write_data
-
-            # print("Write data: ", write_data)
-            # print("Write register: ", write_reg)
-
-        # No write back operation
-        elif not MemToReg and not RegWrite:
-            pass
 
     # Run the pipeline
     def run(self):
