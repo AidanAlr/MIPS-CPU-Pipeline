@@ -133,10 +133,10 @@ control_signals_dict = {
         "RegWrite": 1,  # RegWrite=1 to write the data to a register
     },
     "sb": {
-        "RegDst": 0,  # RegDst=0 because there's no result stored in a register
-        "ALUSrc": 1,  # ALUSrc=1 because the offset is an immediate value
-        "ALUOp": 0,  # ALUOp does not apply to this memory operation
-        "MemRead": 0,  # MemRead=0 because it's a store operation
+        "RegDst": 0,
+        "ALUSrc": 1,
+        "ALUOp": 0,
+        "MemRead": 0,
         "MemWrite": 1,  # MemWrite=1 to write data to memory
         "MemToReg": 0,  # MemToReg does not apply to this operation
         "RegWrite": 0,  # RegWrite=0 because there's no result to be written to a register
@@ -151,13 +151,13 @@ control_signals_dict = {
         "RegWrite": 1,  # RegWrite=1 to write the result to a register
     },
     "sub": {
-        "RegDst": 1,  # RegDst=1 because the result is stored in 'rd' (destination register)
-        "ALUSrc": 0,  # ALUSrc=0 because operands come from registers 'rs' and 'rt'
-        "ALUOp": 1,  # ALUOp=1 specifies that this is a R-format operation and so we will use the funct field
-        "MemRead": 0,  # MemRead=0 because it's not a memory operation
-        "MemWrite": 0,  # MemWrite=0 because it's not a memory operation
-        "MemToReg": 0,  # MemToReg does not apply to this operation
-        "RegWrite": 1,  # RegWrite=1 to write the result to a register
+        "RegDst": 1,
+        "ALUSrc": 0,
+        "ALUOp": 1,
+        "MemRead": 0,
+        "MemWrite": 0,
+        "MemToReg": 0,
+        "RegWrite": 1,
     },
 }
 
