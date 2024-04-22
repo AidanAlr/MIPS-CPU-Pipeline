@@ -93,7 +93,7 @@ class ControlSignals:
 
     - ALUOp (ALU Operation):
       Specifies the operation to be performed by the ALU based on the opcode or function code of the instruction.
-        - ALUOp=2 for addition; ALUOp=6 for subtraction.
+        - ALUOp=1 for R-format instructions; ALUOp=0 for I-format instructions.
 
     - MemRead (Memory Read):
       Indicates whether the instruction involves reading data from memory.
