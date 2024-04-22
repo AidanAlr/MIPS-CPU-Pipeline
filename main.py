@@ -194,7 +194,7 @@ class DataPipeline:
 
     clock_cycle = 0
     completed_instructions = 0
-    instruction_counter = 0
+    PC = 0
 
     def __init__(self, instruction_cache: []):
         self.main_mem = initialize_memory(1024)
@@ -248,8 +248,8 @@ class DataPipeline:
 
     def IF_stage(self):
         # Get the instruction from the instruction cache
-        instruction = self.instruction_cache[self.instruction_counter]
-        self.instruction_counter += 1
+        instruction = self.instruction_cache[self.PC // 4]
+        self.PC += 4
         self.IF_ID.write["instruction"] = instruction
         self.IF_ID.write["nop"] = False
 
@@ -394,7 +394,7 @@ class DataPipeline:
 
         print("\n")
 
-        while self.instruction_counter < len(self.instruction_cache):
+        while self.PC // 4 < len(self.instruction_cache):
             self.IF_stage()
             self.ID_stage()
             self.EX_stage()
