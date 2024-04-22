@@ -26,7 +26,6 @@ Instruction 9:  0
 Instruction 10:  0
 Instruction 11:  0
 Instruction 12:  0
-Instruction 13:  0
 
 
 Clock cycle:  1
@@ -145,16 +144,6 @@ IF_ID:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(R
 ID_EX:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0})
 EX_MEM:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0})
 MEM_WB:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': False, 'control_signals': {'RegDst': 1, 'ALUSrc': 0, 'ALUOp': 1, 'MemRead': 0, 'MemWrite': 0, 'MemToReg': 0, 'RegWrite': 1}, 'instruction': 6438946, 'funct': 'sub', 'read_reg_1_value': 519, 'read_reg_2_value': 258, 'SEoffset': None, 'write_reg_20_16': 2, 'write_reg_15_11': 8, 'ALUResult': 261})
-
-
-
-
-Clock cycle:  13
-Registers:  [256, 257, 258, 519, 260, 261, 262, 527, 261, 523, 4, 267, 268, 269, 270, 271, 272, 20, 274, 275, 276, 277, 278, 279, 258, 281, 282, 283, 284, 285, 286, 287]
-IF_ID:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0})
-ID_EX:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0})
-EX_MEM:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0})
-MEM_WB:  PipelineRegister(write={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0}, read={'nop': True, 'control_signals': ControlSignals(RegDst=0, ALUSrc=0, ALUOp=0, MemRead=0, MemWrite=0, MemToReg=0, RegWrite=0), 'instruction': 0})
 
 
 

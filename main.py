@@ -413,7 +413,19 @@ if __name__ == "__main__":
             0x00000000,
             0x00000000,
             0x00000000,
-            0x00000000,
         ]
     )
     pipeline.run()
+
+    #     {"operation": "sb", "rs": 8, "rt": 2, "rd": None, "off": 0},
+    #     {"operation": "lb", "rs": 8, "rt": 10, "rd": None, "off": -4},
+    #     {"operation": "add", "rs": 4, "rt": 3, "rd": 3, "off": None},
+    #     {"operation": "add", "rs": 9, "rt": 6, "rd": 7, "off": None},
+    #     {"operation": "add", "rs": 9, "rt": 2, "rd": 9, "off": None},
+    #     {"operation": "lb", "rs": 8, "rt": 24, "rd": None, "off": 0},
+    #     {"operation": "lb", "rs": 10, "rt": 17, "rd": None, "off": 16},
+    #     {"operation": "sub", "rs": 3, "rt": 2, "rd": 8, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
