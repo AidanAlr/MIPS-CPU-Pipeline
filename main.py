@@ -111,7 +111,6 @@ class ControlSignals:
       Indicates whether the result of an ALU operation should be written back to a register.
       - RegWrite=1 for instructions producing a result; RegWrite=0 for branch or jump instructions.
 
-    These control signals are typically determined during the instruction decoding stage (ID stage) based on the opcode or function code of the instruction and other relevant fields.
     """
 
     RegDst: int
