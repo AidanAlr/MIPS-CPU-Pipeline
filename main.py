@@ -145,7 +145,7 @@ control_signals_dict = {
     "add": {
         "RegDst": 1,  # RegDst=1 because the result is stored in 'rd' (destination register)
         "ALUSrc": 0,  # ALUSrc=0 because operands come from registers 'rs' and 'rt'
-        "ALUOp": 2,  # ALUOp=2 specifies addition operation
+        "ALUOp": 1,  # ALUOp=1 specifies that this is a R-format operation and so we will use the funct field
         "MemRead": 0,  # MemRead=0 because it's not a memory operation
         "MemWrite": 0,  # MemWrite=0 because it's not a memory operation
         "MemToReg": 0,  # MemToReg does not apply to this operation
@@ -154,7 +154,7 @@ control_signals_dict = {
     "sub": {
         "RegDst": 1,  # RegDst=1 because the result is stored in 'rd' (destination register)
         "ALUSrc": 0,  # ALUSrc=0 because operands come from registers 'rs' and 'rt'
-        "ALUOp": 6,  # ALUOp=6 specifies subtraction operation
+        "ALUOp": 1,  # ALUOp=1 specifies that this is a R-format operation and so we will use the funct field
         "MemRead": 0,  # MemRead=0 because it's not a memory operation
         "MemWrite": 0,  # MemWrite=0 because it's not a memory operation
         "MemToReg": 0,  # MemToReg does not apply to this operation
@@ -187,6 +187,13 @@ def update_control_signals(disassembled_instruction):
     return control_signals_dict[operation]
 
 
+def initialise_noop_pipeline_register():
+    return PipelineRegister(
+        read={"nop": "True", "control_signals": get_nop_control_signals()},
+        write={"nop": "True", "control_signals": get_nop_control_signals()},
+    )
+
+
 class DataPipeline:
     main_mem: []
     regs: []
@@ -202,22 +209,12 @@ class DataPipeline:
         self.instruction_cache = instruction_cache
 
         # Initialize all the pipeline registers to nop
-        self.IF_ID = PipelineRegister(
-            read={"nop": "True", "control_signals": get_nop_control_signals()},
-            write={"nop": "True", "control_signals": get_nop_control_signals()},
-        )
-        self.ID_EX = PipelineRegister(
-            read={"nop": "True", "control_signals": get_nop_control_signals()},
-            write={"nop": "True", "control_signals": get_nop_control_signals()},
-        )
-        self.EX_MEM = PipelineRegister(
-            read={"nop": "True", "control_signals": get_nop_control_signals()},
-            write={"nop": "True", "control_signals": get_nop_control_signals()},
-        )
-        self.MEM_WB = PipelineRegister(
-            read={"nop": "True", "control_signals": get_nop_control_signals()},
-            write={"nop": "True", "control_signals": get_nop_control_signals()},
-        )
+        self.IF_ID = initialise_noop_pipeline_register()
+        self.ID_EX = initialise_noop_pipeline_register()
+        self.EX_MEM = initialise_noop_pipeline_register()
+        self.MEM_WB = initialise_noop_pipeline_register()
+
+        # Print the initial state of the pipeline
         print("Initialized Memory, Registers and Pipeline Registers")
         print("Main_Memory: ", self.main_mem)
         print("Registers: ", self.regs)
@@ -276,6 +273,10 @@ class DataPipeline:
             disassembled_instruction
         )
 
+        # Extract the funct field from the instruction
+        funct = disassembled_instruction["operation"]
+        self.ID_EX.write["funct"] = funct
+
         # Get the values of the read registers
         read_reg_1_value = self.regs[disassembled_instruction["rs"]]
         read_reg_2_value = self.regs[disassembled_instruction["rt"]]
@@ -303,15 +304,18 @@ class DataPipeline:
         read_reg_2_value = self.EX_MEM.write["read_reg_2_value"]
         SEoffset = self.EX_MEM.write["SEoffset"]
 
+        ALUOp = control_signals["ALUOp"]
+
+        funct = self.EX_MEM.write["funct"]
         # ALU operation
         # Checking if the instruction is an I format instruction
-        if SEoffset is not None:
+        if ALUOp == 0:
             ALUResult = read_reg_1_value + SEoffset
-        else:
+        elif ALUOp == 1:
             # For r format instructions
-            if control_signals["ALUOp"] == 2:
+            if funct == "add":
                 ALUResult = read_reg_1_value + read_reg_2_value
-            elif control_signals["ALUOp"] == 6:
+            elif funct == "sub":
                 ALUResult = read_reg_1_value - read_reg_2_value
 
         self.EX_MEM.write["ALUResult"] = ALUResult
