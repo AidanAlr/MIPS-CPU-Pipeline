@@ -199,7 +199,6 @@ class DataPipeline:
     instruction_cache: []
 
     clock_cycle = 0
-    completed_instructions = 0
     PC = 0
 
     def __init__(self, instruction_cache: []):
