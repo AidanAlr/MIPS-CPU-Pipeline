@@ -218,8 +218,15 @@ class DataPipeline:
             read={"nop": "True", "control_signals": get_nop_control_signals()},
             write={"nop": "True", "control_signals": get_nop_control_signals()},
         )
-        print("Initialized Memory and Registers")
-        print("Pipeline Registers Initialized")
+        print("Initialized Memory, Registers and Pipeline Registers")
+        print("Main_Memory: ", self.main_mem)
+        print("Registers: ", self.regs)
+        print()
+        print("Pipeline Registers: ")
+        print("IF_ID", self.IF_ID)
+        print("ID_EX", self.ID_EX)
+        print("EX_MEM", self.EX_MEM)
+        print("MEM_WB", self.MEM_WB)
         print("\n")
 
     # Prints the contents of regs and all pipeline registers
@@ -264,7 +271,6 @@ class DataPipeline:
         instruction = self.ID_EX.write["instruction"]
         disassembled_instruction = disassemble(instruction)
 
-        print("Disassembled Instruction: ", disassembled_instruction)
         # Update the control signals
         self.ID_EX.write["control_signals"] = update_control_signals(
             disassembled_instruction
@@ -273,16 +279,16 @@ class DataPipeline:
         # Get the values of the read registers
         read_reg_1_value = self.regs[disassembled_instruction["rs"]]
         read_reg_2_value = self.regs[disassembled_instruction["rt"]]
-        SEoffset = disassembled_instruction["off"]
-        # Set the write registers
-        write_reg_20_16 = disassembled_instruction["rt"]
-        write_reg_15_11 = disassembled_instruction["rd"]
-
         self.ID_EX.write["read_reg_1_value"] = read_reg_1_value
         self.ID_EX.write["read_reg_2_value"] = read_reg_2_value
+
+        # Set the SEoffset
+        SEoffset = disassembled_instruction["off"]
         self.ID_EX.write["SEoffset"] = SEoffset
-        self.ID_EX.write["write_reg_20_16"] = write_reg_20_16
-        self.ID_EX.write["write_reg_15_11"] = write_reg_15_11
+
+        # Set the write registers
+        self.ID_EX.write["write_reg_20_16"] = disassembled_instruction["rt"]
+        self.ID_EX.write["write_reg_15_11"] = disassembled_instruction["rd"]
 
     def EX_stage(self):
         self.EX_MEM.write = self.ID_EX.read
@@ -330,9 +336,13 @@ class DataPipeline:
 
         # sb operation
         elif control_signals["MemWrite"]:
+            # print("Memory Write Operation")
             address = self.MEM_WB.write["ALUResult"]
             data = self.MEM_WB.write["read_reg_2_value"]
             self.main_mem[address] = data
+            #
+            # print("MEM Instruction: ", disassemble(self.MEM_WB.write["instruction"]))
+            # print(f"Data {data} written to address: {address}")
 
     def WB_stage(self):
 
@@ -341,34 +351,49 @@ class DataPipeline:
         if final_dict["nop"]:
             return
 
-        print("Final Dict: ", final_dict)
-
         control_signals = final_dict["control_signals"]
-        print("Control Signals: ", control_signals)
-
         MemToReg = control_signals["MemToReg"]
-        RegWrite = control_signals["MemWrite"]
+        RegWrite = control_signals["RegWrite"]
+
+        # print("WB Instruction: ", disassemble(final_dict["instruction"]))
 
         # This is a load instruction
         if MemToReg and RegWrite:
             # Get the value to be written to the register
             write_data = final_dict["LBdata"]
             # Get the register to write to
-            write_reg = self.MEM_WB.write["write_reg_20_16"]
+            write_reg = final_dict["write_reg_20_16"]
             self.regs[write_reg] = write_data
 
+            # print("Write data: ", write_data)
+            # print("Write register: ", write_reg)
+
         # This is a R-format instruction
-        if MemToReg and not RegWrite:
+        elif not MemToReg and RegWrite:
             write_data = final_dict["ALUResult"]
             write_reg = final_dict["write_reg_15_11"]
             self.regs[write_reg] = write_data
 
+            # print("Write data: ", write_data)
+            # print("Write register: ", write_reg)
+
+        # No write back operation
+        elif not MemToReg and not RegWrite:
+            pass
+
     # Run the pipeline
     def run(self):
 
-        print("Running the pipeline")
+        print("Running the pipeline...")
+        print("\n")
+        print("Instruction Cache: ")
+        counter = 1
         for instruction in self.instruction_cache:
-            print("Instruction: ", instruction)
+            print(f"Instruction {counter}: ", instruction)
+            counter += 1
+
+        print("\n")
+
         while self.instruction_counter < len(self.instruction_cache):
             self.IF_stage()
             self.ID_stage()
@@ -402,3 +427,35 @@ if __name__ == "__main__":
         ]
     )
     pipeline.run()
+
+    # test_instructions = [
+    #     {"operation": "sb", "rs": 8, "rt": 2, "rd": None, "off": 0},
+    #     {"operation": "lb", "rs": 8, "rt": 10, "rd": None, "off": -4},
+    #     {"operation": "add", "rs": 4, "rt": 3, "rd": 3, "off": None},
+    #     {"operation": "add", "rs": 9, "rt": 6, "rd": 7, "off": None},
+    #     {"operation": "add", "rs": 9, "rt": 2, "rd": 9, "off": None},
+    #     {"operation": "lb", "rs": 8, "rt": 24, "rd": None, "off": 0},
+    #     {"operation": "lb", "rs": 10, "rt": 17, "rd": None, "off": 16},
+    #     {"operation": "sub", "rs": 3, "rt": 2, "rd": 8, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    #     {"operation": "nop", "rs": 0, "rt": 0, "rd": 0, "off": None},
+    # ]
+    #
+    # new_pipeline: DataPipeline = DataPipeline(instruction_cache=[])
+    #
+    # for instruction in test_instructions:
+    #
+    #     if instruction["operation"] in ["sub", "add"]:
+    #         rs_value = new_pipeline.regs[instruction["rs"]]
+    #         rt_value = new_pipeline.regs[instruction["rt"]]
+    #         result_string = ""
+    #         if instruction["operation"] == "sub":
+    #             result = rs_value - rt_value
+    #         elif instruction["operation"] == "add":
+    #             result = rs_value + rt_value
+    #
+    #         result_string = f"{str(result)} in register ${instruction['rd']}"
+    #         print(f"Operation: {instruction['operation']}, Result: {result_string}")

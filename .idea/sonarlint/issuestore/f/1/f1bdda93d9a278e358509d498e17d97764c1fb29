@@ -1,7 +1,7 @@
 
-tpython:S14812"0Remove the unused local variable "assembly_str".(±‚·}8ÍÖµ™ğ1J$8aa2fdde-92c7-49e3-b2be-3da5374aa0d1
-‘python:S100ò"LRename method "IF_stage" to match the regular expression ^[a-z_][a-z0-9_]*$.(œØûŞ8ÍÖµ™ğ1J$905104bb-e671-4b68-8ad8-1747482e2702
-–python:S100ÿ"LRename method "ID_stage" to match the regular expression ^[a-z_][a-z0-9_]*$.(Àæ¹áûÿÿÿÿ8ÍÖµ™ğ1J$4f402992-1041-4468-b837-a29c30e9a62d
-–python:S100Ÿ"LRename method "EX_stage" to match the regular expression ^[a-z_][a-z0-9_]*$.(şºÜãüÿÿÿÿ8ÍÖµ™ğ1J$f53577ad-781b-4607-b102-af0af7eeff22
-’python:S100¹"MRename method "MEM_stage" to match the regular expression ^[a-z_][a-z0-9_]*$.(Ñòİ8ÍÖµ™ğ1J$b85b2627-34cc-4ff5-87b7-b53e8f2aa5b5
-–python:S100Ñ"LRename method "WB_stage" to match the regular expression ^[a-z_][a-z0-9_]*$.(¼”Äÿÿÿÿÿ8ÍÖµ™ğ1J$a37090aa-f2cc-47bb-974b-a046a433fb6f
+tpython:S14812"0Remove the unused local variable "assembly_str".(±‚·}8œÜœğ1J$5e3f368d-697d-41e5-b42f-d370895d8446
+dpython:S125×"Remove this commented out code.(ÆÔœ¦8Ê œğ1J$15ccde32-67d3-4f0d-b581-6ed3152316c3
+ipython:S125ğ"Remove this commented out code.(“Çá×øÿÿÿÿ8Ê œğ1J$a496a475-3ef1-4fc9-914e-3806143f17a7
+ipython:S125ù"Remove this commented out code.(“Çá×øÿÿÿÿ8Ê œğ1J$2a26c2e2-0161-46c4-ae6a-832b87499b04
+npython:S108ş")Either remove or fill this block of code.(ã‘Û¾8ó£™œğ1J$6bd2ad30-6e77-4679-bcdd-a8bb5e882d8f
+cpython:S125¯"Remove this commented out code.(±A8Ê œğ1J$38afa23e-f5d3-491c-b0e9-1fd09157c7a0
