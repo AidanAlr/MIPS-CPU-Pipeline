@@ -275,6 +275,8 @@ class DataPipeline:
         operation = disassembled_instruction["operation"]
         if operation in ["add", "sub"]:
             self.ID_EX.write["funct"] = operation
+        else:
+            self.ID_EX.write["funct"] = None
 
         # Get the values of the read registers
         read_reg_1 = disassembled_instruction["rs"]
