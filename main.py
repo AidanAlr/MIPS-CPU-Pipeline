@@ -69,7 +69,7 @@ def disassemble(instruction) -> dict:
 
 
 def initialize_memory(size):
-    memory = [i % 0x100 for i in range(size + 1)]
+    memory = [i % 0x100 for i in range(size)]
     return memory
 
 
