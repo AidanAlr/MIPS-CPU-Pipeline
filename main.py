@@ -214,8 +214,8 @@ class DataPipeline:
 
         # Print the initial state of the pipeline
         print("Initialized Memory, Registers and Pipeline Registers")
-        print("Main_Memory: ", self.main_mem)
-        print("Registers: ", self.regs)
+        print("Main_Memory: ", get_hex_list(self.main_mem))
+        print("Registers: ", get_hex_list(self.regs))
         print()
         print("Pipeline Registers: ")
         print("IF_ID", self.IF_ID)
@@ -227,7 +227,7 @@ class DataPipeline:
     # Prints the contents of regs and all pipeline registers
     def print_out_everything(self):
         print("Clock cycle: ", self.clock_cycle + 1)
-        print("Registers: ", self.regs)
+        print("Registers: ", get_hex_list(self.regs))
         print("IF_ID: ", self.IF_ID)
         print("ID_EX: ", self.ID_EX)
         print("EX_MEM: ", self.EX_MEM)
@@ -386,7 +386,7 @@ class DataPipeline:
         print("Instruction Cache: ")
         counter = 1
         for instruction in self.instruction_cache:
-            print(f"Instruction {counter}: ", instruction)
+            print(f"Instruction {counter}: ", hex(instruction))
             counter += 1
 
         print("\n")
